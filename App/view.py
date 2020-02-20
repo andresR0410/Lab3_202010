@@ -82,13 +82,13 @@ while True:
             print("Libro No encontrado")    
 
     elif int(inputs[0])==3:
-        authorName = input("Nombre del autor a buscar: ")
-        author = controller.getAuthorInfo (catalog, authorName)
-        if author:
-            print("Libros del autor",authorName,":",lt.size(author['authorBooks']))
-            print("Promedio de Votación: ",authorName,(author['sum_average_rating']/lt.size(author['authorBooks'])))
+        directorName = input("Nombre del director a buscar: ")
+        director = controller.getDirectorInfo (catalog, directorName)
+        if director:
+            print("Peliculas del director",directorName,":",lt.size(director['directorMovies'])
+            print("Promedio de Votación: ",directorName,(director['sum_average_rating']/lt.size(director['directorMovies'])))
         else:
-            print("Autor No encontrado")    
+            print("Diretor No encontrado")    
 
 
     elif int(inputs[0])==4:
