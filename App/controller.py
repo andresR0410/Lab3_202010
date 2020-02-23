@@ -62,7 +62,7 @@ def loadMovies (catalog, sep=','):
     booksfile = cf.data_dir + 'Movies/SmallMoviesDetailsCleaned.csv'
     dialect = csv.excel()
     dialect.delimiter=sep
-    with open(booksfile, encoding="utf-8") as csvfile:
+    with open(booksfile, encoding="utf-8-sig") as csvfile:
         spamreader = csv.DictReader(csvfile, dialect=dialect)
         for row in spamreader: 
             # Se adiciona el libro a la lista de libros
@@ -73,8 +73,8 @@ def loadMovies (catalog, sep=','):
             directors = row['directors'].split(",")
             # Cada autor, se crea en la lista de autores del catalogo, y se 
             # adiciona un libro en la lista de dicho autor (apuntador al libro)
-            for author in authors:
-                model.addAuthor (catalog, author.strip(), row)
+            for director in directors:
+                model.addDirector (catalog, director.strip(), row)
     t1_stop = process_time() #tiempo final
     print("Tiempo de ejecución carga libros:",t1_stop-t1_start," segundos")   
 
@@ -94,7 +94,7 @@ def loadData (catalog):
     Carga los datos de los archivos y cargar los datos en la
     estructura de datos
     """
-    loadBooks(catalog)
+    loadMovies(catalog)
     
 
 # Funciones llamadas desde la vista y enviadas al modelo

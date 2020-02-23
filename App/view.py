@@ -86,7 +86,7 @@ while True:
         director = controller.getDirectorInfo (catalog, directorName)
         if director:
             print("Peliculas del director",directorName,":",lt.size(director['directorMovies'])
-            print("Promedio de Votación: ",directorName,(director['sum_average_rating']/lt.size(director['directorMovies'])))
+            print("Promedio de Votación: ",directorName,":", (director['sum_average_rating']/lt.size(director['directorMovies'])))
         else:
             print("Diretor No encontrado")    
 

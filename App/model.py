@@ -49,15 +49,15 @@ def newMovie (row):
     """
     Crea una nueva estructura para almacenar los actores de una pelicula 
     """
-    movie = {"movies_id": row["id'], "title":row['title'], "average_rating":row['average_rating'], "ratings_count":row['ratings_count']}
-    return book
+    movie = {"movies_id": row['id'], "title":row['title'], "average_rating":row['vote_average'], "ratings_count":row['vote_count']}
+    return movie
 
 def addMovieList (catalog, row):
     """
     Adiciona libro a la lista
     """
     movies = catalog['moviesList']
-    movie = newMovies(row)
+    movie = newMovie(row)
     lt.addLast(movies, movie)
 
 def addMovieMap (catalog, row):
@@ -79,7 +79,7 @@ def newDirector (name, row):
     lt.addLast(director['directorMovies'],row['movies_id'])
     return director
 
-def addAuthor (catalog, name, row):
+def addDirector (catalog, name, row):
     """
     Adiciona un autor al map y sus libros
     """
@@ -87,7 +87,7 @@ def addAuthor (catalog, name, row):
         directors = catalog['directors']
         director=map.get(directors,name,compareByKey)
         if director:
-            lt.addLast(director['directorMovies']),row['movies_id'])
+            lt.addLast(director['directorMovies'],row['movies_id'])
             director['sum_average_rating'] += float(row['average_rating'])
         else:
             director = newDirector(name, row)
