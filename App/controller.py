@@ -59,10 +59,10 @@ def loadMovies (catalog, sep=','):
     referencia al libro que se esta procesando.
     """
     t1_start = process_time() #tiempo inicial
-    booksfile = cf.data_dir + 'Movies/SmallMoviesDetailsCleaned.csv'
+    moviesfile = cf.data_dir + 'Movies/SmallMoviesDetailsCleaned.csv'
     dialect = csv.excel()
     dialect.delimiter=sep
-    with open(booksfile, encoding="utf-8-sig") as csvfile:
+    with open(moviesfile, encoding="utf-8-sig") as csvfile:
         spamreader = csv.DictReader(csvfile, dialect=dialect)
         for row in spamreader: 
             # Se adiciona el libro a la lista de libros

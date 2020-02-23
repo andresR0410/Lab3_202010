@@ -38,11 +38,15 @@ def newCatalog():
     """
     Inicializa el catálogo de peliculas. Retorna el catalogo inicializado.
     """
-    catalog = {'moviesList':None, 'directors':None, 'moviesMap': None}
+    catalog = {'moviesList':None, 'directors':None, 'moviesMap': None, 'actors': None}
     catalog['moviesList'] = lt.newList("ARRAY_LIST")
-    catalog['moviesMap'] = map.newMap (5003, maptype='CHAINING')#10000 books
-    catalog['directors'] = map.newMap (12007, maptype='PROBING') #5841 authors
+    catalog['moviesMap'] = map.newMap (100003, maptype='CHAINING') #peliculas 329044
+    catalog['idMap'] = map.newMap (100003, maptype='CHAINING')
+    catalog['directors'] = map.newMap (171863, maptype='PROBING') #directores 85929
+    catalog['actors'] = map.newMap (86959, maptype='CHAINING') #actores 260861
     return catalog
+
+
 
 
 def newMovie (row):
@@ -64,13 +68,21 @@ def addMovieMap (catalog, row):
     """
     Adiciona libro al map con key=title
     """
-    movies = catalog['MoviesMap']
+    movies = catalog['moviesMap']
     movie = newMovie(row)
     map.put(movies, movie['title'], movie, compareByKey)
 
+def addIdMap (catalog, row):
+    """
+    Adiciona libro al map con key=title
+    """
+    movies = catalog['idMap']
+    movie = newMovie(row)
+    map.put(movies, movie['id'], movie['vote_average'], compareByKey)
+
 def newDirector (name, row):
     """
-    Crea una nueva estructura para modelar un autor y sus libros
+    Crea una nueva estructura para modelar un director y sus peliculas
     """
     director = {'name':"", "directorMovies":None,  "sum_average_rating":0}
     director ['name'] = name
@@ -93,9 +105,7 @@ def addDirector (catalog, name, row):
             director = newDirector(name, row)
             map.put(directors, director['name'], director, compareByKey)
 
-#directores 85929
-#peliculas 329044
-#actores 260861
+
 
 # Funciones de consulta
 
@@ -112,7 +122,7 @@ def getMovieInList (catalog, movieTitle):
 
 def getMovieInMap (catalog, movieTitle):
     """
-    Retorna el libro desde el mapa a partir del titulo (key)
+    Retorna la película desde el mapa a partir del titulo (key)
     """
     return map.get(catalog['moviesMap'], movieTitle, compareByKey)
 
@@ -122,6 +132,12 @@ def getDirectorInfo (catalog, directorName):
     Retorna el autor a partir del nombre
     """
     return map.get(catalog['directors'], directorName, compareByKey)
+
+def getVoteById (catalog, id):
+    """
+    Retorna el promedio de votos de una plícula dado su id
+    """
+    return map.get(catalog['idMap'], id, compareByKey)
 
 # Funciones de comparacion
 
