@@ -39,8 +39,9 @@ operación solicitada
 def printMenu():
     print("Bienvenido al Laboratorio 3")
     print("1- Cargar información")
-    print("2- Buscar libro por titulo")
-    print("3- Buscar información de autor por nombre ...")
+    print("2- Buscar película por titulo")
+    print("3- Buscar información de director por nombre ...") #requrimiento 3
+    print("4- Buscar películas con votación positiva dado un director")
     print("4- Requerimiento 3 ...")
     print("0- Salir")
 
@@ -74,7 +75,7 @@ while True:
         print ('Directores cargados: ' + str(map.size(catalog['directors'])))
         
     elif int(inputs[0])==2:
-        movieTitle = input("Nombre del libro a buscar: ")
+        movieTitle = input("Nombre de la película a buscar: ")
         movie = controller.getMovieInfo (catalog, movieTitle)
         if movie:
             print("Libro encontrado:",movie['title'],",Rating:",movie['average_rating'])
@@ -88,12 +89,19 @@ while True:
             print("Peliculas del director",directorName,":",lt.size(director['directorMovies'])
             print("Promedio de Votación: ",directorName,":",(director['sum_average_rating']/lt.size(director['directorMovies'])))
         else:
-            print("Diretor No encontrado")    
+            print("Director no encontrado")    
 
 
     elif int(inputs[0])==4:
-        label = input (" ")
-        pass
+        directorName = input ("Nombre del director a buscar")
+        positives= controller.getPositiveVotes(catalog, directorName)
+        if positives:
+            print positives
+        else:
+            print ('Director no encontrado')
+
+
+
     else:
         sys.exit(0)
 sys.exit(0)

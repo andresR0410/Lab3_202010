@@ -116,5 +116,9 @@ def getDirectorInfo(catalog, directorName):
     if director:
         return director
     else:
-        return None    
+        return None  
+
+def getPositiveVotes (catalog, directorName):
+    positives= model.getPositiveVotes(catalog, directorName)
+    return positives  
 

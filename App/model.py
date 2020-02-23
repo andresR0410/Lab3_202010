@@ -133,11 +133,17 @@ def getDirectorInfo (catalog, directorName):
     """
     return map.get(catalog['directors'], directorName, compareByKey)
 
-def getVoteById (catalog, id):
-    """
-    Retorna el promedio de votos de una plícula dado su id
-    """
-    return map.get(catalog['idMap'], id, compareByKey)
+def getPositiveVotes (catalog, directorName):
+    director= getDirectorInfo(catalog, directorName)
+    if director:
+        movies=director['directorMovies']
+        positivos=0
+        for id in movies:
+            vote=map.get(catalog['moviesMap'],id,compareByKey)
+            if vote>=6:
+                positivos+=1
+        return positivos
+    return None 
 
 # Funciones de comparacion
 
