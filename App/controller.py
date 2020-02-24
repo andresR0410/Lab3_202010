@@ -119,7 +119,7 @@ def getMovieInfo(catalog, movieTitle):
     book=model.getMovieInList(catalog, movieTitle)
     book=model.getMovieInMap(catalog, movieTitle)
     t1_stop = process_time() #tiempo final
-    print("Tiempo de ejecución buscar libro:",t1_stop-t1_start," segundos")   
+    print("Tiempo de ejecución:",t1_stop-t1_start," segundos")   
     if book:
         return book
     else:
@@ -129,13 +129,16 @@ def getDirectorInfo(catalog, directorName):
     t1_start = process_time() #tiempo inicial
     director=model.getDirectorInfo(catalog, directorName)
     t1_stop = process_time() #tiempo final
-    print("Tiempo de ejecución buscar libro:",t1_stop-t1_start," segundos")   
+    print("Tiempo de ejecución:",t1_stop-t1_start," segundos")   
     if director:
         return director
     else:
         return None  
 
 def getPositiveVotes (catalog, directorName):
+    t1_start = process_time() #tiempo inicial
     positives= model.getPositiveVotes(catalog, directorName)
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución:",t1_stop-t1_start," segundos")
     return positives  
 
