@@ -42,7 +42,7 @@ def printMenu():
     print("2- Buscar película por titulo")
     print("3- Buscar información de director por nombre ...") #requrimiento 3
     print("4- Buscar películas con votación positiva dado un director")
-    print("4- Requerimiento 3 ...")
+    print("5- Requerimiento 3 ...")
     print("0- Salir")
 
 
@@ -94,8 +94,8 @@ while True:
     elif int(inputs[0])==4:
         directorName = input ("Nombre del director a buscar")
         positives= controller.getPositiveVotes(catalog, directorName)
-        if positives:
-            print (positives)
+        if positives!=None:
+            print ("EL director buscado tiene", positives,  "películas con votación positiva")
         else:
             print ('Director no encontrado')
 

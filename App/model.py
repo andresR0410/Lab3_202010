@@ -139,11 +139,21 @@ def getPositiveVotes (catalog, directorName):
     director= getDirectorInfo(catalog, directorName)
     if director:
         movies=director['directorMovies']
+        #print (type(movies))
         positivos=0
-        for id in movies:
-            vote=float(map.get(catalog['idMap'],id,compareByKey))
-            if vote>=6:
-                positivos+=1
+        size = lt.size(movies)
+    
+        if size:
+            iterator = it.newIterator(movies)
+            while  it.hasNext(iterator):
+                id = it.next(iterator)
+            #print(id)
+            #print(type(id))
+                vote=map.get(catalog['idMap'],id,compareByKey)
+                if vote!=None:
+                #print(vote)
+                    if float(vote)>=6:
+                        positivos+=1
         return positivos
     return None 
 
