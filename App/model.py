@@ -53,7 +53,10 @@ def newMovie (row):
     """
     Crea una nueva estructura para almacenar los actores de una pelicula 
     """
-    movie = {"movies_id": row['id'], "title":row['title'], "average_rating":row['vote_average'], "ratings_count":row['vote_count']}
+    try:
+        movie = {"movies_id": row['id'], "title":row['title'], "vote_average":row['vote_average'], "vote_count":row['vote_count']}
+    except:
+        raise Exception("Error rpw",row)
     return movie
 
 def addMovieList (catalog, row):
@@ -78,32 +81,34 @@ def addIdMap (catalog, row):
     """
     movies = catalog['idMap']
     movie = newMovie(row)
-    map.put(movies, movie['id'], movie['vote_average'], compareByKey)
+    map.put(movies, movie['movies_id'], movie['vote_average'], compareByKey)
 
-def newDirector (name, row):
+def newDirector (row, movies, average):
     """
     Crea una nueva estructura para modelar un director y sus peliculas
     """
     director = {'name':"", "directorMovies":None,  "sum_average_rating":0}
-    director ['name'] = name
-    director['sum_average_rating'] = float(row['average_rating'])
+    director ['name'] = row['director_name']
+    director['sum_average_rating'] = float(average)
     director ['directorMovies'] = lt.newList('SINGLE_LINKED')
-    lt.addLast(director['directorMovies'],row['movies_id'])
+    lt.addLast(director['directorMovies'],row['id'])
     return director
 
-def addDirector (catalog, name, row):
+def addDirector (catalog, row):
     """
-    Adiciona un autor al map y sus libros
+    Adiciona un director al mapa
     """
-    if name:
-        directors = catalog['directors']
-        director=map.get(directors,name,compareByKey)
-        if director:
-            lt.addLast(director['directorMovies'],row['movies_id'])
-            director['sum_average_rating'] += float(row['average_rating'])
-        else:
-            director = newDirector(name, row)
-            map.put(directors, director['name'], director, compareByKey)
+    movies=catalog['idMap']
+    directors = catalog['directors']
+    id= row['id']
+    average=map.get(movies, id, compareByKey)
+    director=map.get(directors,row['director_name'],compareByKey)
+    if director:
+        lt.addLast(director['directorMovies'],row['id'])
+        director['sum_average_rating'] += float(average)
+    else:
+        director = newDirector(row, movies, average)
+        map.put(directors, director['name'], director, compareByKey)
 
 
 
@@ -139,7 +144,7 @@ def getPositiveVotes (catalog, directorName):
         movies=director['directorMovies']
         positivos=0
         for id in movies:
-            vote=map.get(catalog['moviesMap'],id,compareByKey)
+            vote=float(map.get(catalog['idMap'],id,compareByKey))
             if vote>=6:
                 positivos+=1
         return positivos
@@ -150,5 +155,5 @@ def getPositiveVotes (catalog, directorName):
 def compareByKey (key, element):
     return  (key == element['key'] )  
 
-def compareByTitle(bookTitle, element):
-    return  (bookTitle == element['title'] )
+def compareByTitle(movieTitle, element):
+    return  (movieTitle == element['title'] )

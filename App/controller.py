@@ -52,14 +52,14 @@ def compareratings (movie1, movie2):
 
 # Funciones para la carga de datos 
 
-def loadMovies (catalog, sep=','):
+def loadMovies (catalog, sep=';'):
     """
     Carga los libros del archivo.  Por cada libro se toman sus autores y por 
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
     t1_start = process_time() #tiempo inicial
-    moviesfile = cf.data_dir + 'Movies/SmallMoviesDetailsCleaned.csv'
+    moviesfile = cf.data_dir + 'AllMoviesDetailsCleaned.csv'
     dialect = csv.excel()
     dialect.delimiter=sep
     with open(moviesfile, encoding="utf-8-sig") as csvfile:
@@ -72,16 +72,27 @@ def loadMovies (catalog, sep=','):
             #se adiciona el id de la pelicula al mapa de ids
             model.addIdMap(catalog, row)
             # Se obtienen los autores del libro
-            directors = row['directors'].split(",")
-            # Cada autor, se crea en la lista de autores del catalogo, y se 
-            # adiciona un libro en la lista de dicho autor (apuntador al libro)
-            for director in directors:
-                model.addDirector (catalog, director.strip(), row)
+            
     t1_stop = process_time() #tiempo final
-    print("Tiempo de ejecución carga libros:",t1_stop-t1_start," segundos")   
+    print("Tiempo de ejecución carga películas:",t1_stop-t1_start," segundos")   
 
 
-
+def loadDirectors(catalog):
+    """
+    Carga todos los directores
+    """
+    t1_start = process_time() #tiempo inicial
+    castingfile = cf.data_dir + 'AllMoviesCastingRaw.csv'
+    
+    dialect = csv.excel()
+    dialect.delimiter=";"
+    with open(castingfile, encoding="utf-8-sig") as csvfile:
+        spamreader = csv.DictReader(csvfile, dialect=dialect)
+        for row in spamreader: 
+            model.addDirector (catalog, row)
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución carga directores",t1_stop-t1_start," segundos")
+    
 def initCatalog ():
     """
     Llama la funcion de inicializacion del catalogo del modelo.
@@ -97,6 +108,7 @@ def loadData (catalog):
     estructura de datos
     """
     loadMovies(catalog)
+    loadDirectors(catalog)
     
 
 # Funciones llamadas desde la vista y enviadas al modelo
