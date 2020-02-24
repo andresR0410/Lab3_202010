@@ -81,16 +81,15 @@ while True:
             print("Libro encontrado:",movie['title'],",Rating:",movie['average_rating'])
         else:
             print("Libro No encontrado")    
-
     elif int(inputs[0])==3:
         directorName = input("Nombre del director a buscar: ")
         director = controller.getDirectorInfo (catalog, directorName)
         if director:
-            print("Peliculas del director",directorName,":",lt.size(director['directorMovies'])
+            print("Peliculas del director",directorName,":",lt.size(director['directorMovies']))
             print("Promedio de Votacion",directorName,":",(director['sum_average_rating']/lt.size(director['directorMovies'])))
         else:
             print("Director no encontrado")
-
+            
     elif int(inputs[0])==4:
         directorName = input ("Nombre del director a buscar")
         positives= controller.getPositiveVotes(catalog, directorName)

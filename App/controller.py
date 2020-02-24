@@ -69,6 +69,8 @@ def loadMovies (catalog, sep=','):
             model.addMovieList(catalog, row)
             # Se adiciona el libro al mapa de libros (key=title)
             model.addMovieMap(catalog, row)
+            #se adiciona el id de la pelicula al mapa de ids
+            model.addIdMap(catalog, row)
             # Se obtienen los autores del libro
             directors = row['directors'].split(",")
             # Cada autor, se crea en la lista de autores del catalogo, y se 
