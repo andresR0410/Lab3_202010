@@ -59,7 +59,7 @@ def loadMovies (catalog, sep=';'):
     referencia al libro que se esta procesando.
     """
     t1_start = process_time() #tiempo inicial
-    moviesfile = cf.data_dir + 'AllMoviesDetailsCleaned.csv'
+    moviesfile = cf.data_dir + 'SmallMoviesDetailsCleaned.csv'
     dialect = csv.excel()
     dialect.delimiter=sep
     with open(moviesfile, encoding="utf-8-sig") as csvfile:
@@ -82,7 +82,7 @@ def loadDirectors(catalog):
     Carga todos los directores
     """
     t1_start = process_time() #tiempo inicial
-    castingfile = cf.data_dir + 'AllMoviesCastingRaw.csv'
+    castingfile = cf.data_dir + 'MoviesCastingRaw-small.csv'
     
     dialect = csv.excel()
     dialect.delimiter=";"

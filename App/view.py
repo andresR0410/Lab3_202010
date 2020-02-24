@@ -92,7 +92,7 @@ while True:
             print("Director no encontrado")
 
     elif int(inputs[0])==4:
-        directorName = input ("Nombre del director a buscar")
+        directorName = input ("Nombre del director a buscar: ")
         positives= controller.getPositiveVotes(catalog, directorName)
         if positives!=None:
             print ("EL director buscado tiene", positives,  "películas con votación positiva")
