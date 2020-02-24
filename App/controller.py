@@ -112,7 +112,10 @@ def getMovieInfo(catalog, movieTitle):
         return None   
 
 def getDirectorInfo(catalog, directorName):
+    t1_start = process_time() #tiempo inicial
     director=model.getDirectorInfo(catalog, directorName)
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución buscar libro:",t1_stop-t1_start," segundos")   
     if director:
         return director
     else:
