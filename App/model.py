@@ -53,10 +53,7 @@ def newMovie (row):
     """
     Crea una nueva estructura para almacenar los actores de una pelicula 
     """
-    try:
-        movie = {"movies_id": row['id'], "title":row['title'], "vote_average":row['vote_average'], "vote_count":row['vote_count']}
-    except:
-        raise Exception("Error rpw",row)
+    movie = {"movies_id": row['id'], "title":row['original_title'], "vote_average":row['vote_average'], "vote_count":row['vote_count']}
     return movie
 
 def addMovieList (catalog, row):
