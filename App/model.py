@@ -79,7 +79,15 @@ def addIdMap (catalog, row):
     """
     movies = catalog['idMap']
     movie = newMovie(row)
-    map.put(movies, movie['movies_id'], movie, compareByKey)
+    pelicula= {'title': movie['title'], 'vote_average': movie['vote_average'], 'director':''}
+    map.put(movies, movie['movies_id'], pelicula, compareByKey)
+
+def directorToId (catalog, row):
+    idMap = catalog['idMap']
+    id= row['id']
+    info=map.get(idMap, id, compareByKey)
+    if info:
+        info['director']= row['director_name']
 
 def newGenre (row):
     """
@@ -177,6 +185,11 @@ def getMovieInMap (catalog, movieTitle):
     """
     return map.get(catalog['moviesMap'], movieTitle, compareByKey)
 
+def getDirectorById (catalog, id):
+    idMap=catalog['idMap']
+    movie= map.get(idMap, id, compareByKey)
+    director=movie['director']
+    return director
 
 def getDirectorInfo (catalog, directorName):
     """

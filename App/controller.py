@@ -91,8 +91,9 @@ def loadCasting(catalog):
     with open(castingfile, encoding="utf-8-sig") as csvfile:
         spamreader = csv.DictReader(csvfile, dialect=dialect)
         for row in spamreader: 
-            model.addDirector (catalog, row)
-            model.addActor (catalog, row)
+            model.addDirector (catalog, row)#cargar los directores
+            model.addActor (catalog, row)#cargar los actores
+            model.directorToId(catalog, row)#adicionar el director al mapa de ids
     t1_stop = process_time() #tiempo final
     print("Tiempo de ejecución carga directores",t1_stop-t1_start," segundos")
     
@@ -118,15 +119,19 @@ def loadData (catalog):
 
 
 def getMovieInfo(catalog, movieTitle):
-    t1_start = process_time() #tiempo inicial
-    book=model.getMovieInList(catalog, movieTitle)
-    book=model.getMovieInMap(catalog, movieTitle)
-    t1_stop = process_time() #tiempo final
-    print("Tiempo de ejecución:",t1_stop-t1_start," segundos")   
-    if book:
-        return book
+    
+    #movie=model.getMovieInList(catalog, movieTitle)
+    movie=model.getMovieInMap(catalog, movieTitle)
+    if movie:
+        id=movie['movies_id']
+        director=model.getDirectorById(catalog, id)
+        print('La película', movie['title'], 'tiene un total de', movie['vote_count'], 'votos.')
+        print('Tiene', movie['vote_average'], 'de voto promedio')
+        print('Fue dirigida por', director)
+        found='yes'
     else:
-        return None   
+        found='no'
+    return found
 
 def getDirectorInfo(catalog, directorName):
     t1_start = process_time() #tiempo inicial
