@@ -39,10 +39,11 @@ operación solicitada
 def printMenu():
     print("Bienvenido al Laboratorio 3")
     print("1- Cargar información")
-    print("2- Buscar película por titulo")
+    print("2- Buscar película por titulo") #requerimiento 2
     print("3- Buscar información de director por nombre ...") #requrimiento 3
-    print("4- Buscar películas con votación positiva dado un director")
-    print("5- Requerimiento 3 ...")
+    print("4- Buscar películas con votación positiva dado un director") #requerimiento 1
+    print("5- Buscar películas por actor") #requerimiento 4
+    print("6- Buscar películas por género") #requerimiento 5
     print("0- Salir")
 
 
@@ -79,14 +80,17 @@ while True:
         movieTitle = input("Nombre de la película a buscar: ")
         movie = controller.getMovieInfo (catalog, movieTitle)
         if movie:
-            print("Película encontrada:",movie['title'],",Rating:",movie['average_rating'])
+            director=None #buscar el director
+            print("Película encontrada:",movie['title'],",Rating:",movie['average_rating'], ",Number of votes:", movie['vote_count'], "Director:", director)
         else:
             print("Película no encontrada")    
+
     elif int(inputs[0])==3:
-        directorName = input("Nombre del director a buscar: ")
-        director = controller.getDirectorInfo (catalog, directorName)
+        directorName = input("Nombre del director que desea consultar: ")
+        director = controller.getDirectorInfo (catalog, directorName)   
         if director:
             print("Peliculas del director",directorName,":",lt.size(director['directorMovies']))
+            print("Lista de películas que ha dirigido:", director['directorMovies'])
             print("Promedio de Votacion",directorName,":",(director['sum_average_rating']/lt.size(director['directorMovies'])))
         else:
             print("Director no encontrado")
@@ -99,7 +103,25 @@ while True:
         else:
             print ('Director no encontrado')
 
+    elif int(inputs[0])==5:
+        actorName= input("Nombre del actor que dessea consultar")
+        actor = controller.getActorInfo (catalog, actorName)
+        if actor:
+            print("Actor", actorName,":", lt.size(actor['movies']), "películas")
+            print("Lista de películas:", actor['movies'])
+            print("Promedio de Votacion:",(actor['sum_average_rating']/lt.size(actor['movies'])))
+            print("EL director que más veces lo ha dirigido:", actor['director'])
+        else:
+            print("Actor no encontrado")
 
+    elif int(inputs[0])==6:
+        genreName = input("Ingrese el género que desea consultar")
+        genre = controller.getGenreInfo (catalog, genreName)
+        if genre:
+            print("Género", genreName,":", lt.size(genre['movies']), "películas")
+            print("Promedio de Votacion",genreName,":",(genre['sum_average_rating']/lt.size(genre['movies'])))
+        else:
+            print("Género no encontrado")
 
     else:
         sys.exit(0)

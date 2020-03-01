@@ -44,6 +44,7 @@ def newCatalog():
     catalog['idMap'] = map.newMap (100003, maptype='CHAINING')
     catalog['directors'] = map.newMap (171863, maptype='PROBING') #directores 85929
     catalog['actors'] = map.newMap (86959, maptype='CHAINING') #actores 260861
+    catalog['genres']=map.newMap(100003, maptype='CHAINING' ) #no sé cuantos géneros hay TOCA CAMBIARLO DESPUES
     return catalog
 
 
@@ -51,14 +52,14 @@ def newCatalog():
 
 def newMovie (row):
     """
-    Crea una nueva estructura para almacenar los actores de una pelicula 
+    Crea una nueva estructura para almacenar los datos de una pelicula 
     """
     movie = {"movies_id": row['id'], "title":row['original_title'], "vote_average":row['vote_average'], "vote_count":row['vote_count']}
     return movie
 
 def addMovieList (catalog, row):
     """
-    Adiciona libro a la lista
+    Adiciona película a la lista
     """
     movies = catalog['moviesList']
     movie = newMovie(row)
@@ -66,7 +67,7 @@ def addMovieList (catalog, row):
 
 def addMovieMap (catalog, row):
     """
-    Adiciona libro al map con key=title
+    Adiciona película al map con key=title
     """
     movies = catalog['moviesMap']
     movie = newMovie(row)
@@ -74,22 +75,51 @@ def addMovieMap (catalog, row):
 
 def addIdMap (catalog, row):
     """
-    Adiciona libro al map con key=title
+    Adiciona película al map con key=id
     """
     movies = catalog['idMap']
     movie = newMovie(row)
-    map.put(movies, movie['movies_id'], movie['vote_average'], compareByKey)
+    map.put(movies, movie['movies_id'], movie, compareByKey)
 
-def newDirector (row, movies, average):
+def newGenre (row):
+    """
+    Crea una nueva estructura para almacenar los datos por género
+    """
+    genre = {"name": " ", "movies": lt.newList(), "sum_average_rating": 0}
+    genre['name']=row['genre']
+    lt.addLast(genre['movies'],row['id'])
+    genre['sum_average_rating']= float(row['vote_average'])
+
+    return genre
+
+def addGenre(catalog, row):
+    """
+    Adiciona el género al mapa con key=genre
+    """
+    genres=catalog['genres']
+    id=row['id']
+    vote=row['vote_average']
+    genre= map.get(genres, row['genre'], compareByKey)
+    if genre:
+        lt.addLast(genre['movies'], id)
+        genre['sum_average_rating'] += float(vote)
+    else:
+        genre = newGenre(row)
+        map.put(genres, genre['name'], genre, compareByKey)
+
+def newDirector (row, average, movieTitle):
     """
     Crea una nueva estructura para modelar un director y sus peliculas
     """
-    director = {'name':"", "directorMovies":None,  "sum_average_rating":0}
+    director = {'name':"", "directorMovies":lt.newList(),  "sum_average_rating":0}
     director ['name'] = row['director_name']
-    director['sum_average_rating'] = float(average)
-    director ['directorMovies'] = lt.newList('SINGLE_LINKED')
-    lt.addLast(director['directorMovies'],row['id'])
+    director['sum_average_rating'] = average
+    lt.addLast(director['directorMovies'],movieTitle)
     return director
+
+def updateDirector (director, average, movieTitle):
+    director['sum_average']+=average
+    lt.addLast(director['directorMovies'], movieTitle)
 
 def addDirector (catalog, row):
     """
@@ -98,14 +128,33 @@ def addDirector (catalog, row):
     movies=catalog['idMap']
     directors = catalog['directors']
     id= row['id']
-    average=map.get(movies, id, compareByKey)
+    movie=map.get(movies, id, compareByKey)
+    average=float(movie['vote_average'])
+    movieTitle=movie['title']
     director=map.get(directors,row['director_name'],compareByKey)
     if director:
-        lt.addLast(director['directorMovies'],row['id'])
-        director['sum_average_rating'] += float(average)
+        updateDirector(director, average, movieTitle)
     else:
-        director = newDirector(row, movies, average)
+        director = newDirector(row, average, movieTitle)
         map.put(directors, director['name'], director, compareByKey)
+
+def newActor (actorName, movie, director, vote):
+    """
+    Crea una nueva estructura para modelar un actor y sus peliculas
+    """
+    actor = {'name':"", "movies":None,  "sum_average_rating":0, "director": ""}
+    actor ['name'] = actorName
+    actor['sum_average_rating'] = float(vote)
+    actor ['movies'] = lt.newList()
+    lt.addLast(actor ['movies'], movie)
+    actor ['director']= director
+    return actor
+
+def updateActor (actor, vote, movie, director):
+    pass
+
+def addActor (catalog, row):
+    pass
 
 
 
@@ -131,9 +180,21 @@ def getMovieInMap (catalog, movieTitle):
 
 def getDirectorInfo (catalog, directorName):
     """
-    Retorna el autor a partir del nombre
+    Retorna el director a partir del nombre
     """
     return map.get(catalog['directors'], directorName, compareByKey)
+
+def getActorInfo (catalog, actorName):
+    """
+    Retorna el actor a partir del nombre
+    """
+    return map.get(catalog['actors'], actorName, compareByKey)
+
+def getGenreInfo (catalog, genreName):
+    """
+    Retorna información sobre el género a partir del nombre
+    """
+    return map.get(catalog['genres'], genreName, compareByKey)
 
 def getPositiveVotes (catalog, directorName):
     director= getDirectorInfo(catalog, directorName)

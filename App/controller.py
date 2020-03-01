@@ -65,19 +65,21 @@ def loadMovies (catalog, sep=';'):
     with open(moviesfile, encoding="utf-8-sig") as csvfile:
         spamreader = csv.DictReader(csvfile, dialect=dialect)
         for row in spamreader: 
-            # Se adiciona el libro a la lista de libros
+            # Se adiciona la pelócula a la lista de películas
             model.addMovieList(catalog, row)
-            # Se adiciona el libro al mapa de libros (key=title)
+            # Se adiciona la película al mapa de películas (key=title)
             model.addMovieMap(catalog, row)
-            #se adiciona el id de la pelicula al mapa de ids
+            # Se adiciona el id de la pelicula al mapa de ids (key= id)
             model.addIdMap(catalog, row)
-            # Se obtienen los autores del libro
+            # Se adiciona el género al mapa de géneros (key= genre)
+            model.addGenre(catalog, row)
+
             
     t1_stop = process_time() #tiempo final
     print("Tiempo de ejecución carga películas:",t1_stop-t1_start," segundos")   
 
 
-def loadDirectors(catalog):
+def loadCasting(catalog):
     """
     Carga todos los directores
     """
@@ -90,6 +92,7 @@ def loadDirectors(catalog):
         spamreader = csv.DictReader(csvfile, dialect=dialect)
         for row in spamreader: 
             model.addDirector (catalog, row)
+            model.addActor (catalog, row)
     t1_stop = process_time() #tiempo final
     print("Tiempo de ejecución carga directores",t1_stop-t1_start," segundos")
     
@@ -108,7 +111,7 @@ def loadData (catalog):
     estructura de datos
     """
     loadMovies(catalog)
-    loadDirectors(catalog)
+    loadCasting(catalog)
     
 
 # Funciones llamadas desde la vista y enviadas al modelo
@@ -134,6 +137,26 @@ def getDirectorInfo(catalog, directorName):
         return director
     else:
         return None  
+
+def getActorInfo(catalog, actorName):
+    t1_start = process_time() #tiempo inicial
+    actor=model.getActorInfo(catalog, actorName)
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución:",t1_stop-t1_start," segundos")   
+    if actor:
+        return actor
+    else:
+        return None  
+
+def getGenreInfo (catalog, genreName):
+    t1_start = process_time() #tiempo inicial
+    genre=model.getGenreInfo(catalog, genreName)
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución:",t1_stop-t1_start," segundos")   
+    if genre:
+        return genre
+    else:
+        return None 
 
 def getPositiveVotes (catalog, directorName):
     t1_start = process_time() #tiempo inicial
