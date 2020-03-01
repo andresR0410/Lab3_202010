@@ -76,6 +76,7 @@ while True:
         print ('Lista Peliculas cargadas: ' + str(lt.size(catalog['moviesList'])))
         print ('Directores cargados: ' + str(map.size(catalog['directors'])))
         print ('Mapa ids cargados:' + str(map.size(catalog['idMap'])))
+        print ('Mapa géneros cargados:' + str(map.size(catalog['genres'])))
         
     elif int(inputs[0])==2:
         movieTitle = input("Nombre de la película a buscar: ")
