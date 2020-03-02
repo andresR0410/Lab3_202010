@@ -40,11 +40,11 @@ def newCatalog():
     """
     catalog = {'moviesList':None, 'directors':None, 'moviesMap': None, 'actors': None}
     catalog['moviesList'] = lt.newList("ARRAY_LIST")
-    catalog['moviesMap'] = map.newMap (100003, maptype='CHAINING') #peliculas 329044
-    catalog['idMap'] = map.newMap (100003, maptype='CHAINING')
-    catalog['directors'] = map.newMap (171863, maptype='CHAINING') #directores 85929
-    catalog['actors'] = map.newMap (86959, maptype='CHAINING') #actores 260861
-    catalog['genres']=map.newMap(100003, maptype='CHAINING' ) #géneros 591
+    catalog['moviesMap'] = map.newMap (100003,109345121, maptype='CHAINING') #peliculas 329044
+    catalog['idMap'] = map.newMap (100003, 109345121,maptype='CHAINING')
+    catalog['directors'] = map.newMap (171863, 109345121,maptype='PROBING') #directores 85929
+    catalog['actors'] = map.newMap (86959, 109345121, maptype='CHAINING') #actores 260861
+    catalog['genres']=map.newMap(1187, 109345121, maptype='PROBING' ) #géneros 591
     return catalog
 
 def newMovie (row):
@@ -143,23 +143,27 @@ def addDirector (catalog, row):
         director = newDirector(row, average, movieTitle)
         map.put(directors, director['name'], director, compareByKey)
 
-def newActor (actorName, movie, director, vote):
+def newActor (actorName, movie, director, vote, director_mas):
     """
     Crea una nueva estructura para modelar un actor y sus peliculas
     """
-    actor = {'name':"", "movies":None,  "sum_average_rating":0, "director": None}
+    actor = {'name':"", "movies":None,  "sum_average_rating":0, "director": {}, 'director_mas':""}
     actor ['name'] = actorName
     actor['sum_average_rating'] = float(vote)
     actor ['movies'] = lt.newList()
     lt.addLast(actor ['movies'], movie)
-    actor ['director']= lt.newList()
-    lt.addLast(actor['director'],director)
+    actor['director'][director]=1
+    actor['director_mas']=director_mas
     return actor
 
 def updateActor (actor, vote, movie, director):
     actor['sum_average_rating']+=vote
     lt.addLast(actor['movies'], movieTitle)
-    lt.addLast(actor['director'],director)
+    if director in actor['director']:
+        actor['director'][director]+=1
+    else:
+        actor['director'][director]=1
+    actor['director_mas']=dir_mas_act(actor['director'])
 
 def addActor (catalog, row):
     actor=catalog["actors"]
@@ -185,19 +189,24 @@ def addActor (catalog, row):
     if actor5:
         updateActor(actor5, average, movieTitle, director)
     if actor1==None and row['actor1_name']!=None:
-        actor = newActor(row['actor1_name'],movieTitle, director, average)
+        director_mas=director
+        actor = newActor(row['actor1_name'],movieTitle, director, average, director_mas)
         map.put(actor, row['actor1_name'], actor, compareByKey)
     if actor2==None and row['actor2_name']!=None:
-        actor = newActor(row['actor2_name'],movieTitle, director, average)
+        director_mas=director
+        actor = newActor(row['actor2_name'],movieTitle, director, average, director_mas)
         map.put(actor, row['actor2_name'], actor, compareByKey)
     if actor3==None and row['actor3_name']!=None:
-        actor = newActor(row['actor3_name'],movieTitle, director, average)
+        director_mas=director
+        actor = newActor(row['actor3_name'],movieTitle, director, average. director_mas)
         map.put(actor, row['actor3_name'], actor, compareByKey)
     if actor4==None and row['actor4_name']!=None:
-        actor = newActor(row['actor4_name'],movieTitle, director, average)
+        director_mas=director
+        actor = newActor(row['actor4_name'],movieTitle, director, average, director_mas)
         map.put(actor, row['actor4_name'], actor, compareByKey)
     if actor5==None and row['actor5_name']!=None:
-        actor = newActor(row['actor5_name'],movieTitle, director, average)
+        director_mas=director
+        actor = newActor(row['actor5_name'],movieTitle, director, average, director_mas)
         map.put(actor, row['actor5_name'], actor, compareByKey)
 # Funciones de consulta
 
@@ -245,7 +254,6 @@ def getPositiveVotes (catalog, directorName):
     director= getDirectorInfo(catalog, directorName)
     if director:
         movies=director['directorMovies']
-        #print (type(movies))
         positivos=0
         size = lt.size(movies)
     
@@ -253,13 +261,9 @@ def getPositiveVotes (catalog, directorName):
             iterator = it.newIterator(movies)
             while  it.hasNext(iterator):
                 id = it.next(iterator)
-            #print(id)
-            #print(type(id))
                 vote=map.get(catalog['idMap'],id,compareByKey)
-                if vote!=None:
-                #print(vote)
-                    if float(vote)>=6:
-                        positivos+=1
+                if float(vote)>=6:
+                    positivos+=1
         return positivos
     return None 
 
@@ -270,3 +274,12 @@ def compareByKey (key, element):
 
 def compareByTitle(movieTitle, element):
     return  (movieTitle == element['title'] )
+
+#Funciones que se requieren para crear cada rama del catálogo
+    
+def dir_mas_act (lista_directores):
+    director_mas=0
+    for director in lista_directores.values():
+        if director>director_mas:
+            director_mas=director
+    return director_mas

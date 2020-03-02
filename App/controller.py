@@ -72,9 +72,7 @@ def loadMovies (catalog, sep=';'):
             # Se adiciona el id de la pelicula al mapa de ids (key= id)
             model.addIdMap(catalog, row)
             # Se adiciona el género al mapa de géneros (key= genre)
-            model.addGenre(catalog, row)
-
-            
+            model.addGenre(catalog, row)   
     t1_stop = process_time() #tiempo final
     print("Tiempo de ejecución carga películas:",t1_stop-t1_start," segundos")   
 
@@ -119,7 +117,7 @@ def loadData (catalog):
 
 
 def getMovieInfo(catalog, movieTitle):
-    
+    t1_start = process_time() #tiempo inicial
     #movie=model.getMovieInList(catalog, movieTitle)
     movie=model.getMovieInMap(catalog, movieTitle)
     if movie:
@@ -131,6 +129,8 @@ def getMovieInfo(catalog, movieTitle):
         found='yes'
     else:
         found='no'
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución:",t1_stop-t1_start," segundos")
     return found
 
 def getDirectorInfo(catalog, directorName):
