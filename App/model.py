@@ -76,7 +76,7 @@ def addIdMap (catalog, row):
     """
     movies = catalog['idMap']
     movie = newMovie(row)
-    pelicula= {'title': movie['title'], 'vote_average': movie['vote_average'], 'director':''}
+    pelicula= {'title': movie['title'], 'vote_average': float(movie['vote_average']), 'director':''}
     map.put(movies, movie['movies_id'], pelicula, compareByKey)
 
 def directorToId (catalog, row):
@@ -260,9 +260,10 @@ def getPositiveVotes (catalog, directorName):
         if size:
             iterator = it.newIterator(movies)
             while  it.hasNext(iterator):
-                id = it.next(iterator)
-                vote=map.get(catalog['idMap'],id,compareByKey)
-                if float(vote['vote_average'])>=6:
+                movieTitle = it.next(iterator)
+                movie=map.get(catalog['moviesMap'],movieTitle,compareByKey)
+                #print(movie)
+                if float(movie['vote_average'])>=6:
                     positivos+=1
         return positivos
     return None 
