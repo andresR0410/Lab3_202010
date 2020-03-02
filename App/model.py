@@ -123,7 +123,7 @@ def newDirector (row, average, movieTitle):
     return director
 
 def updateDirector (director, average, movieTitle):
-    director['sum_average']+=average
+    director['sum_average_rating']+=average
     lt.addLast(director['directorMovies'], movieTitle)
 
 def addDirector (catalog, row):
@@ -156,7 +156,7 @@ def newActor (actorName, movie, director, vote, director_mas):
     actor['director_mas']=director_mas
     return actor
 
-def updateActor (actor, vote, movie, director):
+def updateActor (actor, vote, movieTitle, director):
     actor['sum_average_rating']+=vote
     lt.addLast(actor['movies'], movieTitle)
     if director in actor['director']:
@@ -166,18 +166,18 @@ def updateActor (actor, vote, movie, director):
     actor['director_mas']=dir_mas_act(actor['director'])
 
 def addActor (catalog, row):
-    actor=catalog["actors"]
+    actors=catalog["actors"]
     movies=catalog["idMap"]
     id=row["id"]
     movie=map.get(movies, id, compareByKey)
     average=float(movie['vote_average'])
     movieTitle=movie['title']
     director=row["director_name"]
-    actor1=map.get(actor,row['actor1_name'],compareByKey)
-    actor2=map.get(actor,row['actor2_name'],compareByKey)
-    actor3=map.get(actor,row['actor3_name'],compareByKey)
-    actor4=map.get(actor,row['actor4_name'],compareByKey)
-    actor5=map.get(actor,row['actor5_name'],compareByKey)
+    actor1=map.get(actors,row['actor1_name'],compareByKey)
+    actor2=map.get(actors,row['actor2_name'],compareByKey)
+    actor3=map.get(actors,row['actor3_name'],compareByKey)
+    actor4=map.get(actors,row['actor4_name'],compareByKey)
+    actor5=map.get(actors,row['actor5_name'],compareByKey)
     if actor1:
         updateActor(actor1, average, movieTitle, director)
     if actor2:
@@ -191,23 +191,23 @@ def addActor (catalog, row):
     if actor1==None and row['actor1_name']!=None:
         director_mas=director
         actor = newActor(row['actor1_name'],movieTitle, director, average, director_mas)
-        map.put(actor, row['actor1_name'], actor, compareByKey)
+        map.put(actors, row['actor1_name'], actor, compareByKey)
     if actor2==None and row['actor2_name']!=None:
         director_mas=director
         actor = newActor(row['actor2_name'],movieTitle, director, average, director_mas)
-        map.put(actor, row['actor2_name'], actor, compareByKey)
+        map.put(actors, row['actor2_name'], actor, compareByKey)
     if actor3==None and row['actor3_name']!=None:
         director_mas=director
-        actor = newActor(row['actor3_name'],movieTitle, director, average. director_mas)
-        map.put(actor, row['actor3_name'], actor, compareByKey)
+        actor = newActor(row['actor3_name'],movieTitle, director, average, director_mas)
+        map.put(actors, row['actor3_name'], actor, compareByKey)
     if actor4==None and row['actor4_name']!=None:
         director_mas=director
         actor = newActor(row['actor4_name'],movieTitle, director, average, director_mas)
-        map.put(actor, row['actor4_name'], actor, compareByKey)
+        map.put(actors, row['actor4_name'], actor, compareByKey)
     if actor5==None and row['actor5_name']!=None:
         director_mas=director
         actor = newActor(row['actor5_name'],movieTitle, director, average, director_mas)
-        map.put(actor, row['actor5_name'], actor, compareByKey)
+        map.put(actors, row['actor5_name'], actor, compareByKey)
 # Funciones de consulta
 
 def getMovieInList (catalog, movieTitle):
@@ -262,7 +262,7 @@ def getPositiveVotes (catalog, directorName):
             while  it.hasNext(iterator):
                 id = it.next(iterator)
                 vote=map.get(catalog['idMap'],id,compareByKey)
-                if float(vote)>=6:
+                if float(vote['vote_average'])>=6:
                     positivos+=1
         return positivos
     return None 

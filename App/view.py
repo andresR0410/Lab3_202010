@@ -80,12 +80,9 @@ while True:
         
     elif int(inputs[0])==2:
         movieTitle = input("Nombre de la película a buscar: ")
-        t1_start = process_time() #tiempo inicial
         found= controller.getMovieInfo (catalog, movieTitle)
         if found=='no':
             print("Película no encontrada")    
-        t1_stop = process_time() #tiempo final
-        print("Tiempo de ejecución:",t1_stop-t1_start," segundos")   
 
     elif int(inputs[0])==3:
         directorName = input("Nombre del director que desea consultar: ")
