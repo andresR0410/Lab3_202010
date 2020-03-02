@@ -42,13 +42,10 @@ def newCatalog():
     catalog['moviesList'] = lt.newList("ARRAY_LIST")
     catalog['moviesMap'] = map.newMap (100003, maptype='CHAINING') #peliculas 329044
     catalog['idMap'] = map.newMap (100003, maptype='CHAINING')
-    catalog['directors'] = map.newMap (171863, maptype='PROBING') #directores 85929
+    catalog['directors'] = map.newMap (171863, maptype='CHAINING') #directores 85929
     catalog['actors'] = map.newMap (86959, maptype='CHAINING') #actores 260861
-    catalog['genres']=map.newMap(100003, maptype='CHAINING' ) #no sé cuantos géneros hay TOCA CAMBIARLO DESPUES
+    catalog['genres']=map.newMap(100003, maptype='CHAINING' ) #géneros 591
     return catalog
-
-
-
 
 def newMovie (row):
     """
@@ -94,7 +91,7 @@ def newGenre (row):
     Crea una nueva estructura para almacenar los datos por género
     """
     genre = {"name": " ", "movies": lt.newList(), "sum_average_rating": 0}
-    genre['name']=row['genre']
+    genre['name']=row['genres']
     lt.addLast(genre['movies'],row['id'])
     genre['sum_average_rating']= float(row['vote_average'])
 
@@ -107,7 +104,7 @@ def addGenre(catalog, row):
     genres=catalog['genres']
     id=row['id']
     vote=row['vote_average']
-    genre= map.get(genres, row['genre'], compareByKey)
+    genre= map.get(genres, row['genres'], compareByKey)
     if genre:
         lt.addLast(genre['movies'], id)
         genre['sum_average_rating'] += float(vote)
@@ -150,24 +147,59 @@ def newActor (actorName, movie, director, vote):
     """
     Crea una nueva estructura para modelar un actor y sus peliculas
     """
-    actor = {'name':"", "movies":None,  "sum_average_rating":0, "director": ""}
+    actor = {'name':"", "movies":None,  "sum_average_rating":0, "director": None}
     actor ['name'] = actorName
     actor['sum_average_rating'] = float(vote)
     actor ['movies'] = lt.newList()
     lt.addLast(actor ['movies'], movie)
-    actor ['director']= director
+    actor ['director']= lt.newList()
+    lt.addLast(actor['director'],director)
     return actor
 
 def updateActor (actor, vote, movie, director):
-    pass
+    actor['sum_average_rating']+=vote
+    lt.addLast(actor['movies'], movieTitle)
+    lt.addLast(actor['director'],director)
 
 def addActor (catalog, row):
-    pass
-
-
-
+    actor=catalog["actors"]
+    movies=catalog["idMap"]
+    id=row["id"]
+    movie=map.get(movies, id, compareByKey)
+    average=float(movie['vote_average'])
+    movieTitle=movie['title']
+    director=row["director_name"]
+    actor1=map.get(actor,row['actor1_name'],compareByKey)
+    actor2=map.get(actor,row['actor2_name'],compareByKey)
+    actor3=map.get(actor,row['actor3_name'],compareByKey)
+    actor4=map.get(actor,row['actor4_name'],compareByKey)
+    actor5=map.get(actor,row['actor5_name'],compareByKey)
+    if actor1:
+        updateActor(actor1, average, movieTitle, director)
+    if actor2:
+        updateActor(actor2, average, movieTitle, director)
+    if actor3:
+        updateActor(actor3, average, movieTitle, director)
+    if actor4:
+        updateActor(actor4, average, movieTitle, director)
+    if actor5:
+        updateActor(actor5, average, movieTitle, director)
+    if actor1==None and row['actor1_name']!=None:
+        actor = newActor(row['actor1_name'],movieTitle, director, average)
+        map.put(actor, row['actor1_name'], actor, compareByKey)
+    if actor2==None and row['actor2_name']!=None:
+        actor = newActor(row['actor2_name'],movieTitle, director, average)
+        map.put(actor, row['actor2_name'], actor, compareByKey)
+    if actor3==None and row['actor3_name']!=None:
+        actor = newActor(row['actor3_name'],movieTitle, director, average)
+        map.put(actor, row['actor3_name'], actor, compareByKey)
+    if actor4==None and row['actor4_name']!=None:
+        actor = newActor(row['actor4_name'],movieTitle, director, average)
+        map.put(actor, row['actor4_name'], actor, compareByKey)
+    if actor5==None and row['actor5_name']!=None:
+        actor = newActor(row['actor5_name'],movieTitle, director, average)
+        map.put(actor, row['actor5_name'], actor, compareByKey)
 # Funciones de consulta
-
 
 def getMovieInList (catalog, movieTitle):
     """

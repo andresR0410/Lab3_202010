@@ -89,6 +89,7 @@ while True:
 
     elif int(inputs[0])==3:
         directorName = input("Nombre del director que desea consultar: ")
+        t1_start = process_time() #tiempo inicial
         director = controller.getDirectorInfo (catalog, directorName)   
         if director:
             print("Peliculas del director",directorName,":",lt.size(director['directorMovies']))
@@ -96,17 +97,21 @@ while True:
             print("Promedio de Votacion",directorName,":",(director['sum_average_rating']/lt.size(director['directorMovies'])))
         else:
             print("Director no encontrado")
-
+        t1_stop = process_time() #tiempo final
+        print("Tiempo de ejecución:",t1_stop-t1_start," segundos") 
     elif int(inputs[0])==4:
         directorName = input ("Nombre del director a buscar: ")
+        t1_start = process_time() #tiempo inicial
         positives= controller.getPositiveVotes(catalog, directorName)
         if positives!=None:
             print ("EL director buscado tiene", positives,  "películas con votación positiva")
         else:
             print ('Director no encontrado')
-
+        t1_stop = process_time() #tiempo final
+        print("Tiempo de ejecución:",t1_stop-t1_start," segundos") 
     elif int(inputs[0])==5:
         actorName= input("Nombre del actor que dessea consultar")
+        t1_start = process_time() #tiempo inicial
         actor = controller.getActorInfo (catalog, actorName)
         if actor:
             print("Actor", actorName,":", lt.size(actor['movies']), "películas")
@@ -115,16 +120,19 @@ while True:
             print("EL director que más veces lo ha dirigido:", actor['director'])
         else:
             print("Actor no encontrado")
-
+        t1_stop = process_time() #tiempo final
+        print("Tiempo de ejecución:",t1_stop-t1_start," segundos") 
     elif int(inputs[0])==6:
         genreName = input("Ingrese el género que desea consultar")
+        t1_start = process_time() #tiempo inicial
         genre = controller.getGenreInfo (catalog, genreName)
         if genre:
             print("Género", genreName,":", lt.size(genre['movies']), "películas")
             print("Promedio de Votacion",genreName,":",(genre['sum_average_rating']/lt.size(genre['movies'])))
         else:
             print("Género no encontrado")
-
+        t1_stop = process_time() #tiempo final
+        print("Tiempo de ejecución:",t1_stop-t1_start," segundos") 
     else:
         sys.exit(0)
 sys.exit(0)
