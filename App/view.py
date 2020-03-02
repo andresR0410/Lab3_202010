@@ -106,7 +106,7 @@ while True:
             print ('Director no encontrado')
 
     elif int(inputs[0])==5:
-        actorName= input("Nombre del actor que dessea consultar")
+        actorName= input("Nombre del actor que dessea consultar: ")
         actor = controller.getActorInfo (catalog, actorName)
         if actor:
             print("Actor", actorName,":", lt.size(actor['movies']), "películas")
@@ -117,7 +117,7 @@ while True:
             print("Actor no encontrado")
 
     elif int(inputs[0])==6:
-        genreName = input("Ingrese el género que desea consultar")
+        genreName = input("Ingrese el género que desea consultar: ")
         genre = controller.getGenreInfo (catalog, genreName)
         if genre:
             print("Género", genreName,":", lt.size(genre['movies']), "películas")
